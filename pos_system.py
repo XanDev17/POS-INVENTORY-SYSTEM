@@ -216,55 +216,55 @@ class DatabaseManager:
                 ("admin", admin_password, "admin"),
             )
 
-        # Insert sample products if table is empty
-        cursor.execute("SELECT COUNT(*) FROM products")
-        if cursor.fetchone()[0] == 0:
-            sample_products = [
-                ("Apple", "1234567890123", 1.50, 100, "Fruits"),
-                ("Banana", "1234567890124", 0.80, 150, "Fruits"),
-                ("Bread", "1234567890125", 2.50, 50, "Bakery"),
-                ("Milk", "1234567890126", 3.20, 30, "Dairy"),
-                ("Eggs", "1234567890127", 4.00, 25, "Dairy"),
-                ("Coca Cola", "049000028904", 1.99, 75, "Beverages"),
-                ("Pepsi", "012000005100", 1.89, 65, "Beverages"),
-            ]
-            cursor.executemany(
-                """
-                INSERT INTO products (name, barcode, price, stock, category)
-                VALUES (?, ?, ?, ?, ?)
-            """,
-                sample_products,
-            )
+        # # Insert sample products if table is empty
+        # cursor.execute("SELECT COUNT(*) FROM products")
+        # if cursor.fetchone()[0] == 0:
+        #     sample_products = [
+        #         ("Apple", "1234567890123", 1.50, 100, "Fruits"),
+        #         ("Banana", "1234567890124", 0.80, 150, "Fruits"),
+        #         ("Bread", "1234567890125", 2.50, 50, "Bakery"),
+        #         ("Milk", "1234567890126", 3.20, 30, "Dairy"),
+        #         ("Eggs", "1234567890127", 4.00, 25, "Dairy"),
+        #         ("Coca Cola", "049000028904", 1.99, 75, "Beverages"),
+        #         ("Pepsi", "012000005100", 1.89, 65, "Beverages"),
+        #     ]
+        #     cursor.executemany(
+        #         """
+        #         INSERT INTO products (name, barcode, price, stock, category)
+        #         VALUES (?, ?, ?, ?, ?)
+        #     """,
+        #         sample_products,
+        #     )
 
-        # Insert a sample sale for today if no sales exist
-        cursor.execute("SELECT COUNT(*) FROM sales WHERE DATE(timestamp) = DATE('now')")
-        if cursor.fetchone()[0] == 0:
-            today_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            sample_sale_items = [
-                {"product_id": 1, "name": "Apple", "price": 1.50, "quantity": 2, "subtotal": 3.00},
-                {"product_id": 3, "name": "Bread", "price": 2.50, "quantity": 1, "subtotal": 2.50},
-            ]
-            sample_sale_items_json = json.dumps(sample_sale_items)
+        # # Insert a sample sale for today if no sales exist
+        # cursor.execute("SELECT COUNT(*) FROM sales WHERE DATE(timestamp) = DATE('now')")
+        # if cursor.fetchone()[0] == 0:
+        #     today_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        #     sample_sale_items = [
+        #         {"product_id": 1, "name": "Apple", "price": 1.50, "quantity": 2, "subtotal": 3.00},
+        #         {"product_id": 3, "name": "Bread", "price": 2.50, "quantity": 1, "subtotal": 2.50},
+        #     ]
+        #     sample_sale_items_json = json.dumps(sample_sale_items)
             
-            sample_subtotal = 5.50
-            sample_tax = sample_subtotal * 0.08
-            sample_total = sample_subtotal + sample_tax
+        #     sample_subtotal = 5.50
+        #     sample_tax = sample_subtotal * 0.08
+        #     sample_total = sample_subtotal + sample_tax
 
-            cursor.execute(
-                """
-                INSERT INTO sales (timestamp, items, subtotal, tax, discount, total, cashier)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    today_timestamp,
-                    sample_sale_items_json,
-                    sample_subtotal,
-                    sample_tax,
-                    0.0,
-                    sample_total,
-                    "admin",
-                ),
-            )
+        #     cursor.execute(
+        #         """
+        #         INSERT INTO sales (timestamp, items, subtotal, tax, discount, total, cashier)
+        #         VALUES (?, ?, ?, ?, ?, ?, ?)
+        #         """,
+        #         (
+        #             today_timestamp,
+        #             sample_sale_items_json,
+        #             sample_subtotal,
+        #             sample_tax,
+        #             0.0,
+        #             sample_total,
+        #             "admin",
+        #         ),
+        #     )
  
         conn.commit()
         conn.close()
@@ -397,7 +397,7 @@ class DatabaseManager:
                     items = [
                         SaleItem(
                             product_id=item.get("product_id", 0),
-                            product_name=item.get("name", "Unknown"),
+                            product_name=item.get("product_name", "Unknown"),
                             price=item.get("price", 0.0),
                             quantity=item.get("quantity", 1),
                             subtotal=item.get("subtotal", item.get("price", 0.0) * item.get("quantity", 1))
@@ -514,34 +514,34 @@ class LoginWindow:
 
     def create_widgets(self):
         # Title
-        title_label = tk.Label(
+        title_label = ttk.Label(
             self.window, text="POS System Login", font=("Arial", 16, "bold")
         )
         title_label.pack(pady=20)
 
         # Username
-        tk.Label(self.window, text="Username:").pack()
-        self.username_entry = tk.Entry(self.window, width=20)
+        ttk.Label(self.window, text="Username:").pack()
+        self.username_entry = ttk.Entry(self.window, width=20)
         self.username_entry.pack(pady=5)
 
         # Password
-        tk.Label(self.window, text="Password:").pack()
-        self.password_entry = tk.Entry(self.window, width=20, show="*")
+        ttk.Label(self.window, text="Password:").pack()
+        self.password_entry = ttk.Entry(self.window, width=20, show="*")
         self.password_entry.pack(pady=5)
 
         # Login button
-        login_btn = tk.Button(self.window, text="Login", command=self.login, cursor='hand2')
+        login_btn = ttk.Button(self.window, text="Login", command=self.login, cursor='hand2')
         login_btn.pack(pady=20)
 
         # Bind Enter key
         self.window.bind("<Return>", lambda event: self.login())
 
         # Default credentials info, we will replace this Xantechs and app version.
-        info_label = tk.Label(
-            self.window, 
-            text="(Remove this before exe.)Default: admin / admin123", 
-            font=("Arial", 8), 
-            fg="gray"
+        info_label = ttk.Label(
+            self.window,
+            text="(Remove this before exe.)Default: admin / admin123",
+            font=("Arial", 8),
+            foreground="gray"
         )
         info_label.pack()
 
@@ -585,7 +585,7 @@ class ScannerConfigWindow:
 
     def create_widgets(self):
         # Title
-        title_label = tk.Label(
+        title_label = ttk.Label(
             self.window, text="Wi-Fi Barcode Scanner Setup", font=("Arial", 16, "bold")
         )
         title_label.pack(pady=10)
@@ -596,7 +596,7 @@ class ScannerConfigWindow:
 3. Configure the app with the settings below
 4. Start scanning barcodes!"""
 
-        inst_label = tk.Label(self.window, text=instructions, justify=tk.LEFT)
+        inst_label = ttk.Label(self.window, text=instructions, justify=tk.LEFT)
         inst_label.pack(pady=10)
 
         # Configuration frame
@@ -604,46 +604,46 @@ class ScannerConfigWindow:
         config_frame.pack(fill=tk.X, padx=20, pady=10)
 
         # Server IP
-        tk.Label(config_frame, text="Server IP Address:192.168.8.100").pack(
+        ttk.Label(config_frame, text="Server IP Address:192.168.8.100").pack(
             anchor=tk.W, padx=10, pady=5
         )
         self.ip_var = tk.StringVar(value=self.current_ip)
-        ip_frame = tk.Frame(config_frame)
+        ip_frame = ttk.Frame(config_frame)
         ip_frame.pack(fill=tk.X, padx=10, pady=5)
 
-        tk.Entry(ip_frame, textvariable=self.ip_var, state="readonly", width=20).pack(
+        ttk.Entry(ip_frame, textvariable=self.ip_var, state="readonly", width=20).pack(
             side=tk.LEFT
         )
-        tk.Button(ip_frame, text="Copy", command=self.copy_ip).pack(
+        ttk.Button(ip_frame, text="Copy", command=self.copy_ip).pack(
             side=tk.LEFT, padx=5
         )
 
         # Server Port
-        tk.Label(config_frame, text="Server Port:").pack(anchor=tk.W, padx=10, pady=5)
-        port_frame = tk.Frame(config_frame)
+        ttk.Label(config_frame, text="Server Port:").pack(anchor=tk.W, padx=10, pady=5)
+        port_frame = ttk.Frame(config_frame)
         port_frame.pack(fill=tk.X, padx=10, pady=5)
 
         self.port_var = tk.StringVar(value=str(self.current_port))
-        self.port_entry = tk.Entry(port_frame, textvariable=self.port_var, width=10)
+        self.port_entry = ttk.Entry(port_frame, textvariable=self.port_var, width=10)
         self.port_entry.pack(side=tk.LEFT)
-        tk.Button(port_frame, text="Copy", command=self.copy_port).pack(
+        ttk.Button(port_frame, text="Copy", command=self.copy_port).pack(
             side=tk.LEFT, padx=5
         )
 
         # URL Format
-        tk.Label(config_frame, text="URL Format (for manual setup):").pack(
+        ttk.Label(config_frame, text="URL Format (for manual setup):").pack(
             anchor=tk.W, padx=10, pady=5
         )
         url = f"http://192.168.8.100:8080/?text={{BARCODE}}"
         self.url_var = tk.StringVar(value=url)
-        url_frame = tk.Frame(config_frame)
+        url_frame = ttk.Frame(config_frame)
         url_frame.pack(fill=tk.X, padx=10, pady=5)
 
-        url_entry = tk.Entry(
+        url_entry = ttk.Entry(
             url_frame, textvariable=self.url_var, state="readonly", width=50
         )
         url_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
-        tk.Button(url_frame, text="Copy", command=self.copy_url).pack(
+        ttk.Button(url_frame, text="Copy", command=self.copy_url).pack(
             side=tk.LEFT, padx=5
         )
 
@@ -651,24 +651,24 @@ class ScannerConfigWindow:
         qr_frame = ttk.LabelFrame(self.window, text="Quick Setup")
         qr_frame.pack(fill=tk.X, padx=20, pady=10)
 
-        tk.Label(
+        ttk.Label(
             qr_frame, text="Use this URL to quickly configure your scanner app:"
         ).pack(pady=5)
-        tk.Button(
+        ttk.Button(
             qr_frame, text="Open Setup URL in Browser", command=self.open_setup_url
         ).pack(pady=5)
 
         # Buttons
-        btn_frame = tk.Frame(self.window)
+        btn_frame = ttk.Frame(self.window)
         btn_frame.pack(fill=tk.X, padx=20, pady=10)
 
-        tk.Button(btn_frame, text="Apply Changes", command=self.apply_changes).pack(
+        ttk.Button(btn_frame, text="Apply Changes", command=self.apply_changes).pack(
             side=tk.LEFT, padx=5
         )
-        tk.Button(btn_frame, text="Test Connection", command=self.test_connection).pack(
+        ttk.Button(btn_frame, text="Test Connection", command=self.test_connection).pack(
             side=tk.LEFT, padx=5
         )
-        tk.Button(btn_frame, text="Close", command=self.close_window).pack(
+        ttk.Button(btn_frame, text="Close", command=self.close_window).pack(
             side=tk.RIGHT, padx=5
         )
 
@@ -731,6 +731,8 @@ class POSApplication:
         self.current_user = None
         self.current_role = None
         self.cart_items = []
+        self.sales_summary_label = None  # Initialize to None
+        self.stock_tree = None  # Initialize to None
 
         # Network scanner settings
         self.scanner_port = 8080
@@ -782,29 +784,28 @@ class POSApplication:
         self.create_sales_tab()
         self.create_inventory_tab()
         self.create_reports_tab()
+        self.refresh_reports() # Call refresh_reports here to populate on tab creation
         # self.create_transactions_tab()
 
         # Status bar
         status_frame = tk.Frame(self.master)
         status_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
-        self.status_bar = tk.Label(
+        self.status_bar = ttk.Label(
             status_frame,
             text=f"Logged in as: {self.current_user} ({self.current_role})",
-            bd=1,
             relief=tk.SUNKEN,
             anchor=tk.W,
         )
         self.status_bar.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
         # Scanner status
-        self.scanner_status = tk.Label(
+        self.scanner_status = ttk.Label(
             status_frame,
             text=f"Scanner: {self.local_ip}:{self.scanner_port}",
-            bd=1,
             relief=tk.SUNKEN,
             anchor=tk.E,
-            fg="green",
+            foreground="green",
         )
         self.scanner_status.pack(side=tk.RIGHT, padx=5)
 
@@ -862,11 +863,11 @@ Troubleshooting:
             ip=self.local_ip, port=self.scanner_port
         )
 
-        help_window = tk.Toplevel(self.master)
+        help_window = ttk.Toplevel(self.master)
         help_window.title("Scanner Help")
         help_window.geometry("500x400")
 
-        text_widget = tk.Text(help_window, wrap=tk.WORD, padx=10, pady=10)
+        text_widget = ttk.Text(help_window, wrap=tk.WORD, padx=10, pady=10)
         text_widget.pack(fill=tk.BOTH, expand=True)
         text_widget.insert(tk.END, help_text)
         text_widget.config(state=tk.DISABLED)
@@ -943,8 +944,8 @@ Troubleshooting:
         entry_frame = ttk.LabelFrame(left_frame, text="Product Entry")
         entry_frame.pack(fill=tk.X, pady=5)
 
-        tk.Label(entry_frame, text="Barcode/Product Name:").pack(anchor=tk.W)
-        self.product_entry = tk.Entry(entry_frame, width=30, font=("Arial", 12))
+        ttk.Label(entry_frame, text="Barcode/Product Name:").pack(anchor=tk.W)
+        self.product_entry = ttk.Entry(entry_frame, width=30, font=("Arial", 12))
         self.product_entry.pack(pady=5)
         self.product_entry.bind("<Return>", self.add_product_to_cart)
 
@@ -960,11 +961,11 @@ Troubleshooting:
         ).pack(side=tk.RIGHT, padx=5)
 
         # Scanner status in entry frame
-        scanner_info = tk.Label(
+        scanner_info = ttk.Label(
             entry_frame,
             text=f"📱 Wi-Fi Scanner Ready: {self.local_ip}:{self.scanner_port}",
             font=("Arial", 9),
-            fg="green",
+            foreground="green",
         )
         scanner_info.pack(pady=2)
 
@@ -1011,17 +1012,17 @@ Troubleshooting:
         checkout_frame.pack(fill=tk.BOTH, expand=True)
 
         # Total labels
-        self.subtotal_label = tk.Label(
+        self.subtotal_label = ttk.Label(
             checkout_frame, text="Subtotal: $0.00", font=("Arial", 12)
         )
         self.subtotal_label.pack(pady=5)
 
-        self.tax_label = tk.Label(
+        self.tax_label = ttk.Label(
             checkout_frame, text="Tax (8%): $0.00", font=("Arial", 12)
         )
         self.tax_label.pack(pady=5)
 
-        self.total_label = tk.Label(
+        self.total_label = ttk.Label(
             checkout_frame, text="Total: $0.00", font=("Arial", 14, "bold")
         )
         self.total_label.pack(pady=10)
@@ -1036,7 +1037,6 @@ Troubleshooting:
 
         # Update totals initially
         self.update_totals()
-        self.refresh_reports()
 
     def create_inventory_tab(self):
         """Create the inventory management tab"""
@@ -1058,8 +1058,8 @@ Troubleshooting:
         search_frame = ttk.Frame(control_frame)
         search_frame.pack(side=tk.RIGHT)
 
-        tk.Label(search_frame, text="Search:").pack(side=tk.LEFT, padx=5)
-        self.search_entry = tk.Entry(search_frame, width=20)
+        ttk.Label(search_frame, text="Search:").pack(side=tk.LEFT, padx=5)
+        self.search_entry = ttk.Entry(search_frame, width=20)
         self.search_entry.pack(side=tk.LEFT, padx=5)
         self.search_entry.bind("<KeyRelease>", self.filter_inventory)
 
@@ -1091,24 +1091,9 @@ Troubleshooting:
         reports_tab = ttkb.Frame(self.notebook)
         self.notebook.add(reports_tab, text="Reports")
 
-        # --- Scrollable Canvas Setup ---
-        canvas = tk.Canvas(reports_tab, borderwidth=0, highlightthickness=0)
-        scrollbar = ttkb.Scrollbar(reports_tab, orient="vertical", command=canvas.yview)
-        scrollable_frame = ttkb.Frame(canvas)
-
-        scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-        )
-
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
-
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-
-        # Optional mousewheel binding
-        canvas.bind_all("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units"))
+        # --- Reports Content Frame ---
+        scrollable_frame = ttkb.Frame(reports_tab)
+        scrollable_frame.pack(fill="both", expand=True)
 
     
 
@@ -1177,11 +1162,8 @@ Troubleshooting:
         self.chart_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
         self.update_report_charts(sales_data, self.chart_frame)
-        
-        # Call refresh_reports to update sales summary and low stock alerts
-        self.refresh_reports()
-        
-         # ===== Low Stock Section =====
+
+        # ===== Low Stock Section =====
         stock_frame = ttk.LabelFrame(scrollable_frame, text="Low Stock Alert", padding=10)
         stock_frame.pack(fill="x", padx=10, pady=5)
 
@@ -1191,29 +1173,26 @@ Troubleshooting:
         self.stock_tree.column("Product", width=200)
         self.stock_tree.column("Stock", width=80, anchor="center")
         self.stock_tree.pack(fill="x")
-        
-        self.low_stock_label = tk.Label(
-            stock_frame, text="Checking inventory...", justify=tk.LEFT
-        )
-        self.low_stock_label.pack(pady=10)
 
-        # ===== Export Buttons =====
+        # Sales summary
+        sales_frame = ttk.LabelFrame(scrollable_frame, text="Today's Sales Summary")
+        sales_frame.pack(fill=tk.X, padx=20, pady=10)
+
+        self.sales_summary_label = ttk.Label(
+            sales_frame, text="Loading sales data...", justify=tk.LEFT
+        )
+        self.sales_summary_label.pack(pady=10)
+        
+        
+        
+         # ===== Export Buttons =====
         export_frame = ttk.Frame(scrollable_frame)
         export_frame.pack(fill="x", padx=10, pady=10)
 
         ttk.Button(export_frame, text="Export CSV").pack(side="left", padx=5)
         ttk.Button(export_frame, text="Print Report").pack(side="left", padx=5)
 
-        
-              # Sales summary
-        sales_frame = ttk.LabelFrame(scrollable_frame, text="Today's Sales Summary")
-        sales_frame.pack(fill=tk.X, padx=20, pady=10)
-
-        self.sales_summary_label = tk.Label(
-            sales_frame, text="Loading sales data...", justify=tk.LEFT
-        )
-        self.sales_summary_label.pack(pady=10)  
-        self.refresh_reports()
+       
 
 
 
@@ -1314,8 +1293,6 @@ Troubleshooting:
         # Also refresh the sales summary and low stock alerts after filtering
         self.refresh_reports()
         
-        # Also refresh the sales summary and low stock alerts after filtering
-        self.refresh_reports()
 
 
     def refresh_reports(self):
@@ -1349,13 +1326,10 @@ Troubleshooting:
                 self.stock_tree.delete(item)
 
             if low_stock_items:
-                stock_text = "Low Stock Items:"
                 for p in low_stock_items:
                     self.stock_tree.insert("", "end", values=(p.name, p.stock))
-                self.low_stock_label.config(text=stock_text)
             else:
-                stock_text = "✓ All items have adequate stock levels"
-                self.low_stock_label.config(text=stock_text)
+                self.stock_tree.insert("", "end", values=("✓ All items have adequate stock levels", ""))
 
         except Exception as e:
             print(f"Error refreshing reports: {e}")
@@ -1570,31 +1544,31 @@ Troubleshooting:
         receipt_text += "=" * 40
 
         # Show receipt in a dialog
-        receipt_window = tk.Toplevel(self.master)
+        receipt_window = ttk.Toplevel(self.master)
         receipt_window.title("Receipt Preview")
         receipt_window.geometry("450x600")
         receipt_window.grab_set()
 
         # Create frame for text and buttons
-        main_frame = tk.Frame(receipt_window)
+        main_frame = ttk.Frame(receipt_window)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
         # Receipt text
-        text_widget = tk.Text(main_frame, wrap=tk.WORD, font=("Courier", 10))
+        text_widget = ttk.Text(main_frame, wrap=tk.WORD, font=("Courier", 10))
         text_widget.pack(fill=tk.BOTH, expand=True)
         text_widget.insert(tk.END, receipt_text)
         text_widget.config(state=tk.DISABLED)
 
         # Buttons
-        btn_frame = tk.Frame(main_frame)
+        btn_frame = ttk.Frame(main_frame)
         btn_frame.pack(fill=tk.X, pady=10)
 
-        tk.Button(
+        ttk.Button(
             btn_frame,
             text="Copy to Clipboard",
             command=lambda: self.copy_to_clipboard(receipt_text),
         ).pack(side=tk.LEFT, padx=5)
-        tk.Button(btn_frame, text="Close", command=receipt_window.destroy).pack(
+        ttk.Button(btn_frame, text="Close", command=receipt_window.destroy).pack(
             side=tk.RIGHT, padx=5
         )
 
@@ -1672,9 +1646,11 @@ Troubleshooting:
                 if self.db.add_product(product):
                     messagebox.showinfo(
                         "Success", f"Product '{name}' added successfully"
+                        
                     )
                     dialog.destroy()
                     self.refresh_inventory()
+                    self.refresh_reports() 
                 else:
                     messagebox.showerror(
                         "Error", "Failed to add product. Barcode might already exist."
@@ -1702,6 +1678,7 @@ Troubleshooting:
 
         # Focus on name entry
         name_entry.focus()
+         # Refresh reports to show new product
 
     def refresh_inventory(self):
         """Refresh inventory display"""
