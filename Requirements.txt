@@ -1,0 +1,23 @@
+# POS System Requirements
+# Core Python libraries (usually included with Python)
+# tkinter - GUI framework (included with Python)
+# sqlite3 - Database (included with Python)
+# datetime - Date/time handling (included with Python)
+# json - JSON handling (included with Python)
+# hashlib - Password hashing (included with Python)
+# dataclasses - Data structures (included with Python 3.7+)
+# typing - Type hints (included with Python 3.5+)
+
+# Optional enhancements (uncomment if needed):
+# reportlab==3.6.0          # For PDF receipt generation
+# python-barcode==0.14.0    # For barcode generation
+# Pillow==9.5.0             # Image processing for barcodes
+# python-escpos==3.0a9      # For thermal receipt printer support
+# bcrypt==4.0.1             # Enhanced password hashing
+# PyQt5==5.15.7             # Alternative GUI framework (if switching from Tkinter)
+# requests==2.31.0          # For web API integration
+
+# Development tools (optional):
+# pytest==7.4.0            # For testing
+# black==23.7.0             # Code formatting
+# flake8==6.0.0             # Code linting
